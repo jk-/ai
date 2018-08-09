@@ -2,10 +2,113 @@
 <head>
     
     <title>RGB Data Collector</title>
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous"></script>
 
+    <script>
+        $(document).ready(function(){
+            var r = g = b = 0;
+
+            setRgb();
+
+            var features = [];
+            var labels = [];
+
+            $("#black").css("background-color", getRgb());
+            $("#white").css("background-color", getRgb());
+
+            function getRgb() {
+                return "rgb({0},{1},{2})".format(r, g, b);
+            }
+
+            function setRgb() {
+                r = Math.floor(Math.random() * 255);
+                g = Math.floor(Math.random() * 255);
+                b = Math.floor(Math.random() * 255);
+            }
+
+            $("#black").click(function() {
+                features.push([r,g,b]);
+                labels.push(0);
+                setRgb();
+                updateUI();
+            });
+            $("#white").click(function() {
+                features.push([r,g,b]);
+                labels.push(1);
+                setRgb();
+                updateUI();
+            });
+
+            function updateUI() {
+                $("#black").css("background-color", getRgb());
+                $("#white").css("background-color", getRgb());
+                renderData();
+            }
+
+            function renderData() {
+                $('#features').html("[");
+                for(var keys in features) {
+                    $('#features').append(`<div>[${features[keys]}],</div>`);
+                }
+                $('#features').append("]");
+
+                $('#labels').html("[");
+                for(var keys in labels) {
+                    $('#labels').append(`<div>[${labels[keys]}],</div>`);
+                }
+                $('#labels').append("]");
+            }
+
+        });
+
+        String.prototype.format = function() {
+          a = this;
+          for (k in arguments) {
+            a = a.replace("{" + k + "}", arguments[k])
+          }
+          return a
+        }
+    </script>
+
+    <style>
+        .view-block {
+            float: left;
+            width: 250px;
+            height: 250px;
+            margin-right: 2px;
+        }
+        #black.view-block span {
+            color: black;
+            text-align: center;
+            display: block;
+            vertical-align: middle;
+            line-height: 250px;
+            font-size: 20px;
+        }
+        #white.view-block span {
+            color: white;
+            text-align: center;
+            display: block;
+            vertical-align: middle;
+            line-height: 250px;
+            font-size: 20px;
+        }
+        #features {
+            clear: both;
+        }
+    </style>
 </head>
 <body>
-    
-    
+    <h1>This collects data for training our RGB neural network</h1>
+
+    <p>select the best looking overlay for the text</p>
+
+    <div id="black" class="view-block"><span>Quick Brown Fox</span></div>
+    <div id="white" class="view-block"><span>Quick Brown Fox</span></div>
+    <div id="features"></div>
+    <div id="labels"></div>
 </body>
 </html> 
