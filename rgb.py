@@ -1,3 +1,14 @@
+### Notes: 
+#   It seems the feed forward net we created only works for labels with 0/1
+#
+#   Solution to this problem: since our input of 255, 255, 255
+#   always produced a max of 1 in our sigmoid, it was unable to
+#   updates the weights properly. I noramlized the inputs to X/255
+#   so it was a ratio between 0 and 1 which allowed our sigmoid to progress
+#
+#   working!
+
+
 # this 3 layer NN takes an input of R,G,B values
 # and tells you if the text should be black or white
 #
@@ -9,7 +20,7 @@
 import sys
 import numpy as np
 
-np.random.seed(2)
+np.random.seed(3)
 learning_rate = 0.5
 
 # weights / synapses / connections
@@ -21,16 +32,38 @@ syn0 = 2 * np.random.random((3,4)) - 1
 syn1 = 2 * np.random.random((4,1)) - 1
 
 def predict():
+
     r,g,b = int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3])
     features = np.array([r,g,b])
+    features = normalize(features)
+
+    # from training
+    syn0 = [[-2.08961435,-0.47214912,-2.13670542,-2.13880068],
+        [-4.24999767,-0.78078341,-4.3421069,-4.34619838],
+        [-0.45586479,1.69207576,-0.4438203,-0.44328622]]
+    syn1 = [[58.65008776],
+        [-8.93854651],
+        [64.58167214],
+        [64.85702617]]
+
     l0 = features
     l1 = sigmoid(np.dot(l0, syn0))
     l2 = sigmoid(np.dot(l1, syn1))
-    print("inputs ")
-    print(r)
-    print(g)
-    print(b)
-    print("font color should be ", l2)
+
+    colorInt = np.round(l2)
+    colorStr = "black" if colorInt == 0 else "white"
+
+    print("inputs", r,g,b)
+    print("font color should be", colorStr)
+
+# relu
+def relu(x, d=False):
+    if (d):
+        x[x<=0] = 0
+        x[x>0] = 1
+        return x
+    return np.maximum(x, 0)
+
 
 # activation function
 def sigmoid(x, d=False):
@@ -38,91 +71,92 @@ def sigmoid(x, d=False):
         return (x*(1-x))
     return 1/(1+np.exp(-x))
 
+def normalize(x):
+    return x/225;
+
 # trainign is basically creating an accurate representation of
 # synapses / weights so the prediction can be close as possible
 def train():
-    global syn0
-    global syn1
     # features = x = inputs
     features = np.array([
-        [246,196,241],
-        [69,84,235],
-        [92,78,81],
-        [131,20,46],
-        [121,93,125],
-        [216,100,18],
-        [216,32,206],
-        [45,76,198],
-        [239,34,242],
-        [228,94,49],
-        [100,179,234],
-        [178,152,240],
-        [73,47,136],
-        [182,69,215],
-        [211,169,46],
-        [176,34,25],
-        [235,171,186],
-        [63,114,45],
-        [6,32,139],
-        [156,57,27],
-        [53,139,183],
-        [168,90,100],
-        [67,117,119],
-        [142,99,55],
-        [64,30,178],
-        [223,88,140],
-        [35,49,171],
-        [125,135,210],
-        [126,108,96],
-        [210,111,8],
-        [182,212,209],
-        [214,231,161],
-        [148,36,124],
-        [233,44,246],
-        [103,254,21],
-        [199,183,64],
-        [215,240,146],
-        [123,211,159],
-        [207,65,127],
-        [217,27,114],
-        [171,210,0],
-        [14,114,240],
-        [11,252,126],
-        [180,206,145],
-        [69,232,165],
-        [61,172,170],
-        [177,142,156],
-        [117,22,46],
-        [60,9,136],
-        [126,36,56],
-        [97,74,26],
-        [113,111,93],
-        [135,66,174],
-        [168,76,131],
-        [111,207,65],
-        [227,173,199],
-        [184,30,187],
-        [98,222,67],
-        [189,12,81],
-        [93,135,127],
-        [113,58,190],
-        [6,252,241],
-        [177,14,116],
-        [71,228,18],
-        [63,46,102],
-        [127,83,208],
-        [173,180,206],
-        [173,208,247],
-        [232,180,1],
-        [122,64,156],
-        [175,225,2],
-        [72,156,106],
-        [193,64,126],
-        [204,177,69],
-        [218,171,62],
-        [139,42,199],
-        [58,134,98],
-        [30,167,120]
+        [247,30,227],
+        [154,46,171],
+        [1,96,85],
+        [251,97,168],
+        [231,120,240],
+        [84,0,141],
+        [32,78,97],
+        [48,58,206],
+        [151,225,177],
+        [7,76,218],
+        [207,133,202],
+        [220,7,59],
+        [245,188,131],
+        [32,222,54],
+        [18,105,6],
+        [145,39,160],
+        [139,114,40],
+        [93,72,69],
+        [165,197,119],
+        [24,188,6],
+        [120,177,212],
+        [145,205,24],
+        [69,236,85],
+        [64,28,121],
+        [55,64,69],
+        [66,56,219],
+        [75,99,222],
+        [79,81,135],
+        [179,5,208],
+        [105,27,187],
+        [74,182,17],
+        [166,36,169],
+        [4,254,174],
+        [125,203,38],
+        [104,108,87],
+        [215,210,181],
+        [157,25,200],
+        [198,79,85],
+        [121,226,80],
+        [109,118,0],
+        [91,110,169],
+        [152,232,207],
+        [128,46,62],
+        [185,107,8],
+        [252,165,178],
+        [16,40,101],
+        [134,47,7],
+        [95,215,107],
+        [130,210,20],
+        [180,132,173],
+        [14,146,206],
+        [216,110,116],
+        [31,17,61],
+        [150,40,94],
+        [12,101,213],
+        [60,149,177],
+        [250,182,71],
+        [18,42,10],
+        [39,77,142],
+        [12,94,91],
+        [214,87,40],
+        [185,202,224],
+        [49,34,173],
+        [152,192,171],
+        [148,191,186],
+        [147,157,169],
+        [55,100,45],
+        [13,164,36],
+        [218,79,118],
+        [204,246,41],
+        [201,108,147],
+        [186,56,103],
+        [150,196,205],
+        [26,129,66],
+        [75,218,206],
+        [73,227,253],
+        [116,50,147],
+        [112,245,186]
     ])
 
     # labels = y = outputs = "targets"
@@ -130,25 +164,8 @@ def train():
         [0],
         [1],
         [1],
-        [1],
-        [1],
-        [1],
-        [1],
-        [1],
-        [1],
-        [1],
         [0],
         [0],
-        [1],
-        [1],
-        [0],
-        [1],
-        [0],
-        [1],
-        [1],
-        [1],
-        [1],
-        [1],
         [1],
         [1],
         [1],
@@ -156,15 +173,10 @@ def train():
         [1],
         [0],
         [1],
-        [1],
         [0],
         [0],
         [1],
         [1],
-        [0],
-        [0],
-        [0],
-        [0],
         [1],
         [1],
         [0],
@@ -179,39 +191,67 @@ def train():
         [1],
         [1],
         [1],
-        [1],
-        [1],
-        [0],
-        [0],
-        [1],
-        [0],
-        [1],
-        [1],
-        [1],
         [0],
         [1],
         [0],
         [1],
         [1],
         [0],
+        [1],
+        [1],
+        [0],
+        [1],
+        [1],
+        [0],
+        [1],
+        [1],
+        [0],
+        [1],
+        [1],
+        [0],
+        [0],
+        [0],
+        [0],
+        [0],
+        [1],
+        [1],
+        [1],
+        [0],
+        [0],
+        [1],
+        [1],
+        [1],
         [0],
         [0],
         [1],
         [0],
+        [0],
+        [0],
         [1],
+        [0],
+        [0],
+        [0],
+        [1],
+        [1],
+        [0],
         [1],
         [0],
         [0],
         [1],
-        [1],
-        [1],
+        [0]
     ])
+
+    l2_sqr_err = 100;
+    itt = 0;
 
     # loop 60000 iterations so the weights have enough
     # times to adjust to lowering the error rate towards zero
-    for j in range(60000):
+    while (l2_sqr_err > .1):
+        itt += 1
+
         # our first layer are the inputs r, g, b
         l0 = features
+        l0 = normalize(l0)
 
         # below we "feed forward" through the network
 
@@ -230,15 +270,16 @@ def train():
         # this is the total error of our expected output (targets)
         # and the current output
         l2_error = labels - l2
+        l2_sqr_err = np.mean(np.abs(l2_error))
 
         # we need to take the mean squared error to find the actuall 
         # error rate
-        if (j % 5000) == 0:
-            print ('Error Rate: ', str(np.mean(np.abs(l2_error))))
+        if (itt % 10000) == 0:
+            print ('Error Rate: ', str(l2_sqr_err))
 
         # here we find the delta between our output layers
         # and the deriviate of the weights
-        l2_delta = l2_error * sigmoid(l2, d=True)
+        l2_delta = l2_error * learning_rate * sigmoid(l2, d=True)
 
         # we find the hidden layer deltas by taking the dot product of
         # the output deltas and output synapse weights
@@ -246,23 +287,23 @@ def train():
 
         # now we go back even further and use the hidden layer
         # erorr rates and find the hidden layer deltas
-        l1_delta = l1_error * sigmoid(l1, d=True)
+        l1_delta = l1_error * learning_rate * sigmoid(l1, d=True)
 
-        # now that we have the delates between the expected and output
+        # now that we have the deltas between the expected and output
         # we can update our synapses/weights
         syn1 += l1.T.dot(l2_delta)
         syn0 += l0.T.dot(l1_delta)
 
+
     #print('syn0 weights')
-    #print(syn0)
+    print(syn0)
     #print('syn1 weights')
-    #print(syn1)
+    print(syn1)
     #print('expected results after training')
     #print(labels)
     #print(np.around(l2,decimals=1))
 
-train()
-print(predict())
+predict()
 
 
 
