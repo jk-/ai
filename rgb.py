@@ -28,14 +28,6 @@ import numpy as np
 np.random.seed(1)
 learning_rate = 0.5
 
-# weights / synapses / connections
-# syn0 is the weights for features -> hidden layers
-# syn1 is the weights for hidden layers -> outputs
-# 3,4 is the 3 inputs to 4 hidden nodes
-# 4,1 is the 4 hidden nodes into the 1 output node
-syn0 = 2 * np.random.random((3,4)) - 1
-syn1 = 2 * np.random.random((4,1)) - 1
-
 def inputpredict():
     r,g,b = int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3])
     features = np.array([r,g,b])
@@ -67,14 +59,13 @@ def masspredict():
         [215,179,162],
         [245,80,16],
         [246,230,215]])
-
     predict(features)
 
 
 def predict(features):
     features = normalize(features)
 
-    # from training
+    # taken from training
     syn0 = [[-2.08961435,-0.47214912,-2.13670542,-2.13880068],
         [-4.24999767,-0.78078341,-4.3421069,-4.34619838],
         [-0.45586479,1.69207576,-0.4438203,-0.44328622]]
@@ -272,6 +263,14 @@ def train():
         [1],
         [0]
     ])
+
+    # weights / synapses / connections
+    # syn0 is the weights for features -> hidden layers
+    # syn1 is the weights for hidden layers -> outputs
+    # 3,4 is the 3 inputs to 4 hidden nodes
+    # 4,1 is the 4 hidden nodes into the 1 output node
+    syn0 = 2 * np.random.random((3,4)) - 1
+    syn1 = 2 * np.random.random((4,1)) - 1
 
     l2_sqr_err = 100;
     itt = 0;
