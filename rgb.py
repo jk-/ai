@@ -20,7 +20,7 @@
 import sys
 import numpy as np
 
-np.random.seed(3)
+np.random.seed(1)
 learning_rate = 0.5
 
 # weights / synapses / connections
@@ -31,10 +31,69 @@ learning_rate = 0.5
 syn0 = 2 * np.random.random((3,4)) - 1
 syn1 = 2 * np.random.random((4,1)) - 1
 
-def predict():
-
+def inputpredict():
     r,g,b = int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3])
     features = np.array([r,g,b])
+    predict(features)
+
+def masspredict():
+    features = np.array([[224,168,93],
+        [130,156,65],
+        [121,227,29],
+        [71,179,198],
+        [224,3,31],
+        [187,45,110],
+        [29,247,56],
+        [194,44,203],
+        [62,242,97],
+        [212,18,17],
+        [100,74,253],
+        [223,204,232],
+        [221,124,17],
+        [180,191,95],
+        [93,218,81],
+        [212,130,90],
+        [112,2,234],
+        [24,1,182],
+        [66,66,236],
+        [221,169,39],
+        [219,130,28],
+        [236,106,180],
+        [215,179,162],
+        [245,80,16],
+        [246,230,215]])
+    '''
+    predicted:
+        [0.]
+        [0.]
+        [0.]
+        [0.]
+        [1.]
+        [1.]
+        [0.]
+        [1.]
+        [0.]
+        [1.]
+        [1.]
+        [0.]
+        [0.]
+        [0.]
+        [0.]
+        [0.]
+        [1.]
+        [1.]
+        [1.]
+        [0.]
+        [0.]
+        [0.]
+        [0.]
+        [1.]
+        [0.]
+    '''
+    predict(features)
+
+
+def predict(features):
     features = normalize(features)
 
     # from training
@@ -49,12 +108,8 @@ def predict():
     l0 = features
     l1 = sigmoid(np.dot(l0, syn0))
     l2 = sigmoid(np.dot(l1, syn1))
-
-    colorInt = np.round(l2)
-    colorStr = "black" if colorInt == 0 else "white"
-
-    print("inputs", r,g,b)
-    print("font color should be", colorStr)
+    l2 = np.round(l2)
+    print(l2)
 
 # relu
 def relu(x, d=False):
@@ -303,7 +358,7 @@ def train():
     #print(labels)
     #print(np.around(l2,decimals=1))
 
-predict()
+masspredict()
 
 
 

@@ -1,0 +1,121 @@
+<html>
+<head>
+    
+    <title>RGB Data Collector</title>
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous"></script>
+
+    <script>
+        $(document).ready(function(){
+            
+            var features = [
+                [224,168,93],
+                [130,156,65],
+                [121,227,29],
+                [71,179,198],
+                [224,3,31],
+                [187,45,110],
+                [29,247,56],
+                [194,44,203],
+                [62,242,97],
+                [212,18,17],
+                [100,74,253],
+                [223,204,232],
+                [221,124,17],
+                [180,191,95],
+                [93,218,81],
+                [212,130,90],
+                [112,2,234],
+                [24,1,182],
+                [66,66,236],
+                [221,169,39],
+                [219,130,28],
+                [236,106,180],
+                [215,179,162],
+                [245,80,16],
+                [246,230,215]
+            ];
+
+            var outputs = [
+                [0],
+                [0],
+                [0],
+                [0],
+                [1],
+                [1],
+                [0],
+                [1],
+                [0],
+                [1],
+                [1],
+                [0],
+                [0],
+                [0],
+                [0],
+                [0],
+                [1],
+                [1],
+                [1],
+                [0],
+                [0],
+                [0],
+                [0],
+                [1],
+                [0]
+            ];
+
+            function renderData() {
+                $('#output').html("");
+                var i = 0;
+                for(var keys in features) {
+                    $('#output').append(`<div class="view-block" style="background-color: rgb(${features[keys][0]}, ${features[keys][1]},${features[keys][2]});"><span class="color color-${outputs[i][0]}">Quick Brown Fox</span></div>`);
+                    i++;
+                }
+            }
+
+            renderData();
+
+        });
+
+        String.prototype.format = function() {
+          a = this;
+          for (k in arguments) {
+            a = a.replace("{" + k + "}", arguments[k])
+          }
+          return a
+        }
+    </script>
+
+    <style>
+        .view-block {
+            float: left;
+            width: 250px;
+            height: 250px;
+            margin-right: 2px;
+        }
+
+        .color-0 {
+            color: black;
+        }
+
+        .color-1 {
+            color: white;
+        }
+
+        .color {
+            text-align: center;
+            display: block;
+            vertical-align: middle;
+            line-height: 250px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Testing output of neural net</h1>
+
+    <div id="output"></div>
+</body>
+</html> 
