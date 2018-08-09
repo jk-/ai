@@ -3,7 +3,8 @@
 #
 #   Solution to this problem: since our input of 255, 255, 255
 #   always produced a max of 1 in our sigmoid, it was unable to
-#   updates the weights properly. I noramlized the inputs to X/255
+#   update the weights properly to reduce the error rate. I noramlized the inputs 
+#   by taking.. X/255
 #   so it was a ratio between 0 and 1 which allowed our sigmoid to progress
 #
 
@@ -301,10 +302,11 @@ def train():
         # this is the total error of our expected output (targets)
         # and the current output
         l2_error = labels - l2
-        l2_sqr_err = np.mean(np.abs(l2_error))
-
+        
         # we need to take the mean squared error to find the actuall 
         # error rate
+        l2_sqr_err = np.mean(np.abs(l2_error))
+
         if (itt % 10000) == 0:
             print ('Error Rate: ', str(l2_sqr_err))
 
