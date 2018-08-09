@@ -1,12 +1,11 @@
 ### Notes: 
-#   It seems the feed forward net we created only works for labels with 0/1
+#   One issue.. the feed forward net we created only works for labels with 0/1
 #
 #   Solution to this problem: since our input of 255, 255, 255
 #   always produced a max of 1 in our sigmoid, it was unable to
 #   updates the weights properly. I noramlized the inputs to X/255
 #   so it was a ratio between 0 and 1 which allowed our sigmoid to progress
 #
-#   working!
 
 
 # this 3 layer NN takes an input of R,G,B values
@@ -16,6 +15,12 @@
 # output = [0|1]
 #
 # 3 input nodes, 4 hidden nodes, 2 output nodes
+#
+#   inputpredict to take a single value
+#        rgb.py 255 255 255
+#
+#   masspredict to take a large array of inputs
+#
 
 import sys
 import numpy as np
@@ -62,34 +67,7 @@ def masspredict():
         [215,179,162],
         [245,80,16],
         [246,230,215]])
-    '''
-    predicted:
-        [0.]
-        [0.]
-        [0.]
-        [0.]
-        [1.]
-        [1.]
-        [0.]
-        [1.]
-        [0.]
-        [1.]
-        [1.]
-        [0.]
-        [0.]
-        [0.]
-        [0.]
-        [0.]
-        [1.]
-        [1.]
-        [1.]
-        [0.]
-        [0.]
-        [0.]
-        [0.]
-        [1.]
-        [0.]
-    '''
+
     predict(features)
 
 
@@ -118,7 +96,6 @@ def relu(x, d=False):
         x[x>0] = 1
         return x
     return np.maximum(x, 0)
-
 
 # activation function
 def sigmoid(x, d=False):
@@ -351,47 +328,11 @@ def train():
 
 
     #print('syn0 weights')
-    print(syn0)
+    #print(syn0)
     #print('syn1 weights')
-    print(syn1)
+    #print(syn1)
     #print('expected results after training')
     #print(labels)
     #print(np.around(l2,decimals=1))
 
-masspredict()
-
-
-
-'''
-# inputs are R, G, B
-
-
-
-inputs r,g,b
-
-two hidden layers
-h1
-h2
-
-two bias one for hidden, one for outputs
-b1
-b2
-
-h1 is equal to the dot product of inputs and wh1 + b1 * 1
-h2 is equal to the dot product of inputs and wh2 + b1 * 1
-
-h1 and h2 run through sigmoid
-
-two output layers
-
-o1 is equal to h1 * wo1 + b2 * 1 -> sigmoid
-o2 is equal to h2 * wo2 + b2 * 1-> sigmoid
-
-eo1 = sqrErr ( target, output )
-eo2 = sqrErr ( target, output )
-err = eo1 + eo2
-
-now we need to back propagate to adjust the weights and reduce the error
-
-
-'''
+inputpredict()
