@@ -78,7 +78,6 @@ def sift_down(x, start, end):
         else:
             return
 
-
 ary = [1,0,5,3,2,9,6,7,8]
 print("starting array..")
 print(ary)
