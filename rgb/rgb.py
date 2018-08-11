@@ -308,7 +308,7 @@ def train():
         l2_sqr_err = np.mean(np.abs(l2_error))
 
         if (itt % 10000) == 0:
-            print ('Error Rate: ', str(l2_sqr_err))
+            print ('Error Rate:', str(l2_sqr_err))
 
         # here we find the delta between our output layers
         # and the deriviate of the weights
@@ -336,4 +336,4 @@ def train():
     #print(labels)
     #print(np.around(l2,decimals=1))
 
-inputpredict()
+train()

@@ -16,9 +16,14 @@
 import sys
 import numpy as np
 from numpy import genfromtxt
+import pyqtgraph as pg
 
 np.random.seed(1)
 learning_rate = 0.5
+
+def minmax(x, min, max):
+    x_std = (x - x.min(axis=0)) / (x.max(axis=0) - x.min(axis=0))
+    return x_std * (max - min) + min
 
 def inputpredict():
     r,g,b = int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3])
@@ -27,19 +32,19 @@ def inputpredict():
 
 def masspredict():
     trainingData = genfromtxt('predict.csv', delimiter=',')[1::]
-    features = trainingData
+    features = minmax(trainingData,0,1)
     predict(features)
 
 
 def predict(features):
     # taken from training
-    syn0 = [[-0.1970442,0.37423284, -1.02183979, -0.45759824],
-        [-1.34580949, -1.46633727, -1.3173524,5.30540803],
-        [-0.22598985, -0.00935176, -0.16247903,  0.31048998]]
-    syn1 = [[ 3.54829253],
-        [ 4.79201775],
-        [ 3.2661089 ],
-        [13.1659753 ]]
+    syn0 = [[ 6.75507334e-01,2.13022021e+00, -1.01607322e+00,  1.30583290e+00],
+ [ 6.63388566e-04,  5.89953097e-01, -5.87888274e-01,  9.55919125e-01],
+ [ 4.79107072e-01,  1.54613808e+00, -1.34530468e-01,  1.57370306e+00]]
+    syn1 = [[3.82726501],
+ [7.99927128],
+ [1.6063072 ],
+ [6.90428593]]
 
     l0 = features
     l1 = sigmoid(np.dot(l0, syn0))
@@ -60,18 +65,18 @@ def sigmoid(x, d=False):
         return (x*(1-x))
     return 1/(1+np.exp(-x))
 
-def scale_range (input, min, max):
-    input += -(np.min(input))
-    input /= np.max(input) / (max - min)
-    input += min
-    return input
-
 # trainign is basically creating an accurate representation of
 # synapses / weights so the prediction can be close as possible
 def train():
     trainingData = genfromtxt('data.csv', delimiter=',')[1::]
     features = trainingData[:len(trainingData),:3]
     labels = trainingData[:len(trainingData),3::]
+
+    features = minmax(features, 0, 1)
+
+    fbs = features[:len(trainingData),:1]
+    cesi = features[:len(trainingData),1:-1]
+    ebs = features[:len(trainingData),2::]
 
     # weights / synapses / connections
     # syn0 is the weights for features -> hidden layers
@@ -86,7 +91,7 @@ def train():
 
     # loop 60000 iterations so the weights have enough
     # times to adjust to lowering the error rate towards zero
-    while (l2_sqr_err > .1 and itt <= 100000):
+    while (l2_sqr_err > .1 and itt <= 1000000):
         itt += 1
 
         # our first layer are the inputs r, g, b
@@ -115,7 +120,7 @@ def train():
         l2_sqr_err = np.mean(np.abs(l2_error))
 
         if (itt % 10000) == 0:
-            print ('epoch', itt ,'Error Rate:', str(l2_sqr_err))
+            print ('epoch', itt,'Error Rate:', str(l2_sqr_err))
 
         # here we find the delta between our output layers
         # and the deriviate of the weights
@@ -143,4 +148,4 @@ def train():
     #print(labels)
     #print(np.around(l2,decimals=1))
 
-masspredict()
+train()
