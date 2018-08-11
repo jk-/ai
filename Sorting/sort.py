@@ -49,7 +49,35 @@ def shellSort(x):
 
 # https://en.wikipedia.org/wiki/Heapsort
 def heapsort(x):
-    pass
+    heapify(x,len(x))
+    end = len(x) - 1
+    while end > 0:
+        x[end], x[0] = x[0], x[end]
+        end -= 1
+        sift_down(x, 0, end)
+    return x
+
+def heapify(x, count):
+    start = int((count-2)/2)
+    while start >= 0:
+        sift_down(x, start, count - 1)
+        start -= 1
+
+def sift_down(x, start, end):
+    root = start
+    while (root * 2 + 1) <= end:
+        child = root * 2 + 1
+        swap = root
+        if x[swap] < x[child]:
+            swap = child
+        if (child + 1) <= end and x[swap] < x[child+1]:
+            swap = child + 1
+        if swap != root:
+            x[root], x[swap] = x[swap], x[root]
+            root = swap
+        else:
+            return
+
 
 ary = [1,0,5,3,2,9,6,7,8]
 print("starting array..")
@@ -59,3 +87,4 @@ print("Buble Sort", bubbleSort(ary))
 print("Selection Sort", selectionSort(ary))
 print("Insertion Sort", insertionSort(ary))
 print("Shell Sort", shellSort(ary))
+print("Heap Sort", heapsort(ary))
