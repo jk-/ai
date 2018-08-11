@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 ### Notes: 
 #   One issue.. the feed forward net we created only works for labels with 0/1
 #
@@ -321,7 +323,7 @@ def train():
         # now we go back even further and use the hidden layer
         # erorr rates and find the hidden layer deltas
         l1_delta = l1_error * learning_rate * sigmoid(l1, d=True)
-
+        
         # now that we have the deltas between the expected and output
         # we can update our synapses/weights
         syn1 += l1.T.dot(l2_delta)
