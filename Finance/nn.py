@@ -66,6 +66,11 @@ def sigmoid(x, d=False):
         return (x*(1-x))
     return 1/(1+np.exp(-x))
 
+def tanh(x, d=False):
+    if (d):
+        return 1. - x * x
+    return np.tanh(x)
+
 # trainign is basically creating an accurate representation of
 # synapses / weights so the prediction can be close as possible
 def train():
@@ -73,11 +78,11 @@ def train():
     features = trainingData[:len(trainingData),:3]
     labels = trainingData[:len(trainingData),3::]
 
-    features = minmax(features, 0, 1)
-
+    '''
     fbs = features[:len(trainingData),:1]
     cesi = features[:len(trainingData),1:-1]
     ebs = features[:len(trainingData),2::]
+    '''
 
     # weights / synapses / connections
     # syn0 is the weights for features -> hidden layers
@@ -103,12 +108,12 @@ def train():
         # our second layer are the hidden layers
         # we take the dot product of inputs and synapses
         # and run them through the activation function
-        l1 = sigmoid(np.dot(l0, syn0))
+        l1 = relu(np.dot(l0, syn0))
 
         # we take the hidden nodes and generate our third layer
         # the output layer, and run them through the activation
         # function to normalize probabilities
-        l2 = sigmoid(np.dot(l1, syn1))
+        l2 = tanh(np.dot(l1, syn1))
 
         # backward propagation where we update our weights
 
@@ -125,7 +130,7 @@ def train():
 
         # here we find the delta between our output layers
         # and the deriviate of the weights
-        l2_delta = l2_error * learning_rate * sigmoid(l2, d=True)
+        l2_delta = l2_error * tanh(l2, d=True)
 
         # we find the hidden layer deltas by taking the dot product of
         # the output deltas and output synapse weights
@@ -133,7 +138,7 @@ def train():
 
         # now we go back even further and use the hidden layer
         # erorr rates and find the hidden layer deltas
-        l1_delta = l1_error * learning_rate * sigmoid(l1, d=True)
+        l1_delta = l1_error * relu(l1, d=True)
 
         # now that we have the deltas between the expected and output
         # we can update our synapses/weights
