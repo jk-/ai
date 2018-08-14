@@ -4,23 +4,19 @@
 # 2D Convolution #
 ##################
 
+import matplotlib
+matplotlib.use('Agg')
+
+from skimage import io, viewer, color
 import numpy as np
 
 # blank picture
-picture = np.zeros(36)
-
-# fill picture with digits
-for i in range(36):
-    picture[i] = i
-
-# shape the array from 1x36 to a 6x6
-picture = picture.reshape(6,6)
+picture = io.imread('image.jpg')
+picture = color.rgb2gray(picture)
 
 # Because we need to account for the edges of the image we need
-# to pad the picture with empty digits
-
-# 8x8 temp
-padded_picture = np.zeros((picture.shape[0] + 2, picture.shape[0] + 2))
+# to pad the picture with zeros
+padded_picture = np.zeros((picture.shape[0] + 2, picture.shape[1] + 2))
 
 # inject the picture inside the padded_picture
 # python <3
@@ -40,9 +36,8 @@ kernel = np.flipud(np.fliplr(kernel))
 
 # this moves the kernel over each section of the picture
 # and gets the summized dot product
-for x in range(picture.shape[0]):
+for x in range(picture.shape[1]):
     for y in range(picture.shape[0]):
         output[y,x]=(kernel*padded_picture[y:y+3,x:x+3]).sum()
 
-print(picture)
-print(output)
+viewer.ImageViewer(output).show()
